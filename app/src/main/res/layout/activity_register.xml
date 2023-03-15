@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/login_container"
-        android:layout_width="375dp"
-        android:layout_height="447dp"
+        android:id="@+id/register_container"
+        android:layout_width="379dp"
+        android:layout_height="487dp"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="91dp"
+        android:layout_marginTop="80dp"
         android:layout_marginRight="32dp"
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="264dp"
-            android:layout_height="192dp"
+            android:layout_width="205dp"
+            android:layout_height="197dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/logo_transparent" />
 
         <EditText
-            android:id="@+id/email_edit_text"
+            android:id="@+id/register_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -34,7 +34,7 @@
             android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/password_edit_text"
+            android:id="@+id/register_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -48,25 +48,26 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/register_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:background="@drawable/button_background"
-            android:text="Login"
+            android:text="Register"
             android:textColor="@color/button_text"
             android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:id="@+id/sign_up"
             android:layout_height="24dp"
+            android:id="@+id/sign_button"
+            android:text="Sign in?"
+            android:visibility="visible"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:text="Sign up?"
-            android:textColor="@color/black"
-            android:visibility="visible" />
+            android:textColor="@color/black"/>
+
 
     </LinearLayout>
 
-    </RelativeLayout>
+</RelativeLayout>
