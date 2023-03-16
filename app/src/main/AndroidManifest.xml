@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Light.NoActionBar">
         <activity android:name=".MainActivity"/>
+        <activity android:name=".LogoutActivity"/>
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SplashActivity"

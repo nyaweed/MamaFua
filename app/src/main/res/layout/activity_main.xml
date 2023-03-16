@@ -50,9 +50,9 @@
                 android:layout_width="395dp"
                 android:layout_height="57dp"
                 android:layout_marginStart="15dp"
-                android:text="Laundry Service"
-                android:textColor="@color/black"
-                android:fontFamily="sans-serif-black"
+                android:text="Mama Fua"
+                android:textColor="#630DEDEC"
+                android:fontFamily="sans-serif"
                 android:textSize="34sp" />
 
             <TextView
@@ -62,9 +62,23 @@
                 android:layout_below="@+id/title_bold"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="-1dp"
-                android:text="Discover"
-                android:textColor="@color/black"
+                android:text="Ngarisha"
+                android:textColor="#630DEDEC"
                 android:textSize="24sp" />
+
+            <ImageButton
+                android:id="@+id/accButton"
+                android:layout_width="39dp"
+                android:layout_height="34dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="14dp"
+                android:layout_marginBottom="531dp"
+                android:background="#20074A"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_account"
+                tools:visibility="visible"
+                app:tint="#4D12B6" />
 
 
         </RelativeLayout>
@@ -82,7 +96,10 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
         android:background="@drawable/splash_background"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottomnav">
