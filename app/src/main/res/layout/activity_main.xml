@@ -6,90 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@drawable/splash_background"
+    android:background="?android:attr/windowBackground"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="133dp"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="578dp"
-            tools:ignore="UselessParent">
-
-            <ImageView
-                android:id="@drawable/logo_transparent"
-                android:layout_width="57dp"
-                android:layout_height="63dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="11dp"
-                android:layout_marginBottom="390dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_filter"
-                tools:ignore="ContentDescription" />
-
-            <SearchView
-                android:id="@+id/search_recipe"
-                android:layout_width="309dp"
-                android:layout_height="70dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="383dp"
-                android:iconifiedByDefault="false"
-                android:queryBackground="@android:color/transparent"
-                android:queryHint="Search Services"
-                android:theme="@style/Widget.AppCompat.SearchView"
-                app:queryBackground="@android:color/transparent" />
-
-            <TextView
-                android:id="@+id/title_bold"
-                android:layout_width="395dp"
-                android:layout_height="57dp"
-                android:layout_marginStart="15dp"
-                android:text="Mama Fua"
-                android:textColor="#630DEDEC"
-                android:fontFamily="sans-serif"
-                android:textSize="34sp" />
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="397dp"
-                android:layout_height="63dp"
-                android:layout_below="@+id/title_bold"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="-1dp"
-                android:text="Ngarisha"
-                android:textColor="#630DEDEC"
-                android:textSize="24sp" />
-
-            <ImageButton
-                android:id="@+id/accButton"
-                android:layout_width="39dp"
-                android:layout_height="34dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="14dp"
-                android:layout_marginBottom="531dp"
-                android:background="#20074A"
-                android:visibility="visible"
-                app:srcCompat="@drawable/ic_account"
-                tools:visibility="visible"
-                app:tint="#4D12B6" />
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:gravity="center_horizontal">
-
-        </RelativeLayout>
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -100,7 +26,7 @@
         android:fitsSystemWindows="true"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
-        android:background="@drawable/splash_background"
+        android:background="?android:attr/windowBackground"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottomnav">
 
