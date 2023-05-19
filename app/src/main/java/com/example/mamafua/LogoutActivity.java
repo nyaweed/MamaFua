@@ -20,7 +20,17 @@ public class LogoutActivity extends AppCompatActivity {
         setContentView(R.layout.logout_activity);
 
         Button logoutBtn = findViewById(R.id.logout_button);
+        Button statusBtn = findViewById(R.id.save_btn);
         mAuth = FirebaseAuth.getInstance();
+
+        statusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LogoutActivity.this, VendorActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
