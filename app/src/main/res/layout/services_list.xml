@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+
     android:layout_height="wrap_content">
+
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="90dp"
         android:id="@+id/card_view"
-        xmlns:card_view="https://schemas.android.com/apk/res-auto"
-        card_view:cardBackgroundColor="@color/color_white"
-        card_view:cardCornerRadius="10dp"
-        card_view:cardElevation="5dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="8dp"
+        android:background="@drawable/home_card_round"
         card_view:cardUseCompatPadding="true"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="76dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="1dp"
             tools:ignore="MissingConstraints">
 
             <ImageView
                 android:id="@+id/imageViewvendor"
-                android:layout_width="313dp"
+                android:layout_width="153dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:src="@tools:sample/avatars" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/laundry" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -41,16 +43,11 @@
                 <TextView
                     android:id="@+id/Service_name"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:text="Service name"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/Service_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="109dp"
-                    android:text="TextView"
-                    android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

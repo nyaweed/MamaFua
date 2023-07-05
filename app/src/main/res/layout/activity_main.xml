@@ -21,13 +21,13 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
         android:background="@drawable/home_card_round"
-        app:labelVisibilityMode="labeled"
+        android:fitsSystemWindows="true"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:labelVisibilityMode="unlabeled"
         app:menu="@menu/bottomnav">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>

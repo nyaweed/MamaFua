@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,6 +51,7 @@ public class EditProfile extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
+    private FirebaseAuth mAuth;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     StorageReference storageReference;
@@ -86,6 +88,8 @@ public class EditProfile extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference("Users");
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        mAuth = FirebaseAuth.getInstance();
+        Button logoutBtn = findViewById(R.id.logout_button);
         Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -112,6 +116,18 @@ public class EditProfile extends AppCompatActivity {
             public void onClick(View v) {
                 pd.setMessage("Changing Password");
                 showPasswordChangeDailog();
+            }
+        });
+
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Toast.makeText(EditProfile.this, "Logout successful", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EditProfile.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -199,6 +215,8 @@ public class EditProfile extends AppCompatActivity {
                 showPasswordChangeDailog();
             }
         });
+
+
     }
 
     // checking storage permission ,if given then we can add something in our storage

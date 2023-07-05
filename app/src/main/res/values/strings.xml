@@ -2,4 +2,5 @@
     <string name="app_name">Mama Fua</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="service_string">Enjoy a wide range of services from trusted vendors</string>
 </resources>

@@ -7,6 +7,8 @@
     android:background="#F1EDED"
     tools:context=".AccountFragment">
 
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -70,6 +72,7 @@
             </LinearLayout>
 
         </RelativeLayout>
+
 
     </ScrollView>
 

@@ -2,6 +2,7 @@ package com.example.mamafua;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import com.bumptech.glide.Glide;
 
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,7 +44,7 @@ public class AccountFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
+    private DatabaseReference databaseReference;
     ImageView avatartv;
     TextView name, email, nam;
     RecyclerView postrecycle;
@@ -87,12 +89,17 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       // return inflater.inflate(R.layout.fragment_account, container, false);
+        // return inflater.inflate(R.layout.fragment_account, container, false);
 
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         // creating a  view to inflate the layout
         firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser.getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+
 
         // getting current user data
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -108,6 +115,11 @@ public class AccountFragment extends Fragment {
         pd.setCanceledOnTouchOutside(false);
         Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
 
+        String name = currentUser.getDisplayName();
+       // String email = currentUser.getEmail();
+
+
+
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -118,7 +130,7 @@ public class AccountFragment extends Fragment {
                     String image = "" + dataSnapshot1.child("image").getValue();
                     // setting data to our text view
                     nam.setText(name);
-                    email.setText(emaill);
+                    email.setText((CharSequence) email);
 
                     try {
                         Glide.with(getActivity()).load(image).into(avatartv);
@@ -134,15 +146,47 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        // On click we will open EditProfileActiity
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), EditProfile.class));
             }
         });
+
+
+
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    User user = dataSnapshot.getValue(User.class);
+                    if (user != null) {
+                        // Display the user's data in the UI
+                        TextView nameTextView = view.findViewById(R.id.nametv);
+                        TextView emailTextView = view.findViewById(R.id.emailtv);
+                        ImageView profileImageView = view.findViewById(R.id.avatartv);
+
+                        nameTextView.setText(user.getName());
+                        emailTextView.setText(user.getEmail());
+
+                        //Load the profile picture using a library like Picasso or Glide
+                        Picasso.get().load((Uri) user.getProfilePictureUrl()).into(profileImageView);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors
+            }
+        });
         return view;
     }
+        // On click we will open EditProfileActivity
+
+
 
 
     public void onClick(View v){

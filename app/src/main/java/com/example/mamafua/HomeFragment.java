@@ -1,13 +1,14 @@
 package com.example.mamafua;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.appcompat.widget.SearchView;
+import android.widget.Button;
+import android.widget.ImageButton;
+
+import androidx.fragment.app.Fragment;
 
 
 /**
@@ -25,6 +26,9 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -55,12 +59,49 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+       // return inflater.inflate(R.layout.fragment_home, container, false);
+
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+
+        ImageButton notify = rootView.findViewById(R.id.notifyButton);
+        Button buttonMoveToActivity = rootView.findViewById(R.id.services_btn);
+        Button moveToVendors = rootView.findViewById(R.id.vendor_btn);
+
+        notify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NotifyActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        buttonMoveToActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to start the new activity
+                Intent intent = new Intent(getActivity(), ServicesActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        moveToVendors.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an Intent to start the new activity
+                Intent intent = new Intent(getActivity(), VendorsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return rootView;
     }
 }
