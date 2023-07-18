@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F1EDED"
-    tools:context=".AccountFragment">
+    tools:context=".AccountFragment" >
+
 
 
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/scroll_view">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -21,7 +23,7 @@
                 android:id="@+id/cavertv"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/colorAccent"
                 android:scaleType="fitXY">
             </ImageView>
 
@@ -38,7 +40,7 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginStart="20dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorPrimaryDark"
                     android:padding="5dp"
                     android:src="@drawable/person_24"
                     tools:ignore="ContentDescription" />
@@ -46,7 +48,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#77000000"
+                    android:background="#F3F6F6"
                     android:orientation="vertical">
 
                     <TextView
@@ -55,18 +57,20 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
+                        android:text="name"
                         android:layout_marginTop="5dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="25sp"
                         tools:ignore="RtlHardcoded" />
 
                     <TextView
                         android:id="@+id/emailtv"
+                        android:text="email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -75,6 +79,15 @@
 
 
     </ScrollView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vendor_status"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/scroll_view"
+        android:text="Get Vendor Status"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

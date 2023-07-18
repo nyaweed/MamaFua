@@ -8,5 +8,9 @@ public class Vendors {
         this.name = name;
         this.image = image;
     }
+
+    public String getName() {
+        return name;
+    }
 }
 

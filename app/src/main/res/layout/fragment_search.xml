@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/button_text"
-    tools:context=".SearchFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    tools:context=".SearchFragment"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Search Fragment" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_background"
+        android:focusable="false"
+        app:closeIcon="@drawable/baseline_clear_24"
+        app:iconifiedByDefault="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Search..."
+        app:searchHintIcon="@null"
+        android:layout_marginTop="5dp"
+        app:searchIcon="@drawable/baseline_search_24"
+        tools:layout_editor_absoluteX="22dp" />
 
-</FrameLayout>
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="5dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+</LinearLayout>

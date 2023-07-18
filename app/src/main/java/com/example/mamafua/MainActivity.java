@@ -7,13 +7,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ActionBar actionBar;
     BottomNavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

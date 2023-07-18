@@ -2,6 +2,7 @@ package com.example.mamafua;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,19 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
+import java.util.ArrayList;
 
 
 /**
@@ -26,6 +40,11 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    RecyclerView recyclerView;
+    AdapterUsers adapterUsers;
+    List<ModelUsers> usersList;
+    FirebaseAuth firebaseAuth;
 
 
 
@@ -68,13 +87,21 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       // return inflater.inflate(R.layout.fragment_home, container, false);
+       // return inflater.inflate(R.layout.fragment_home, container, false)
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         ImageButton notify = rootView.findViewById(R.id.notifyButton);
         Button buttonMoveToActivity = rootView.findViewById(R.id.services_btn);
         Button moveToVendors = rootView.findViewById(R.id.vendor_btn);
+
+        recyclerView = rootView.findViewById(R.id.recyclerview_recommended);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        usersList = new ArrayList<>();
+        firebaseAuth = FirebaseAuth.getInstance();
+        getAllUsers();
 
         notify.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,24 +111,43 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        buttonMoveToActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Create an Intent to start the new activity
-                Intent intent = new Intent(getActivity(), ServicesActivity.class);
-                startActivity(intent);
-            }
+        buttonMoveToActivity.setOnClickListener(v -> {
+            // Create an Intent to start the new activity
+            Intent intent = new Intent(getActivity(), ServicesActivity.class);
+            startActivity(intent);
         });
 
-        moveToVendors.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Create an Intent to start the new activity
-                Intent intent = new Intent(getActivity(), VendorsActivity.class);
-                startActivity(intent);
-            }
+        moveToVendors.setOnClickListener(v -> {
+            // Create an Intent to start the new activity
+            Intent intent = new Intent(getActivity(), VendorsActivity.class);
+            startActivity(intent);
         });
 
         return rootView;
+    }
+
+    private void getAllUsers() {
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                usersList.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelUsers modelUsers = dataSnapshot1.getValue(ModelUsers.class);
+                    assert modelUsers != null;
+                    if (modelUsers.getUid() != null && !modelUsers.getUid().equals(firebaseUser.getUid())) {
+                        usersList.add(modelUsers);
+                    }
+                    adapterUsers = new AdapterUsers(getActivity(), usersList);
+                    recyclerView.setAdapter(adapterUsers);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
