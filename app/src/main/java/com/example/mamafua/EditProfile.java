@@ -111,41 +111,29 @@ public class EditProfile extends AppCompatActivity {
             }
         });
 
-        editpassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pd.setMessage("Changing Password");
-                showPasswordChangeDailog();
-            }
+        editpassword.setOnClickListener(v -> {
+            pd.setMessage("Password Changed");
+            showPasswordChangeDailog();
         });
 
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                Toast.makeText(EditProfile.this, "Logout successful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(EditProfile.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        logoutBtn.setOnClickListener(v -> {
+            mAuth.signOut();
+            Toast.makeText(EditProfile.this, "Logout successful", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(EditProfile.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
 
-        profilepic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pd.setMessage("Updating Profile Picture");
-                profileOrCoverPhoto = "image";
-                showImagePicDialog();
-            }
+        profilepic.setOnClickListener(v -> {
+            pd.setMessage("Updating Profile Picture");
+            profileOrCoverPhoto = "image";
+            showImagePicDialog();
         });
 
-        editname.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pd.setMessage("Updating Name");
-                showNamephoneupdate("name");
-            }
+        editname.setOnClickListener(v -> {
+            pd.setMessage("Updating Name");
+            showNamephoneupdate("name");
         });
 
     }
@@ -256,52 +244,43 @@ public class EditProfile extends AppCompatActivity {
         layout.addView(editText);
         builder.setView(layout);
 
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final String value = editText.getText().toString().trim();
-                if (!TextUtils.isEmpty(value)) {
-                    pd.show();
+        builder.setPositiveButton("Update", (dialog, which) -> {
+            final String value = editText.getText().toString().trim();
+            if (!TextUtils.isEmpty(value)) {
+                pd.show();
 
-                    // Here we are updating the new name
-                    HashMap<String, Object> result = new HashMap<>();
-                    result.put(key, value);
-                    databaseReference.child(firebaseUser.getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
+                // Here we are updating the new name
+                HashMap<String, Object> result = new HashMap<>();
+                result.put(key, value);
+                databaseReference.child(firebaseUser.getUid()).updateChildren(result).addOnSuccessListener(aVoid -> {
+                    pd.dismiss();
+
+                    // after updated we will show updated
+                    Toast.makeText(EditProfile.this, " updated ", Toast.LENGTH_LONG).show();
+                }).addOnFailureListener(e -> {
+                    pd.dismiss();
+                    Toast.makeText(EditProfile.this, "Unable to update", Toast.LENGTH_LONG).show();
+                });
+                if (key.equals("name")) {
+                    final DatabaseReference databaser = FirebaseDatabase.getInstance().getReference("Posts");
+                    Query query = databaser.orderByChild("uid").equalTo(uid);
+                    query.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            pd.dismiss();
-
-                            // after updated we will show updated
-                            Toast.makeText(EditProfile.this, " updated ", Toast.LENGTH_LONG).show();
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                String child = databaser.getKey();
+                                dataSnapshot1.getRef().child("uname").setValue(value);
+                            }
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
+
                         @Override
-                        public void onFailure(@NonNull Exception e) {
-                            pd.dismiss();
-                            Toast.makeText(EditProfile.this, "Unable to update", Toast.LENGTH_LONG).show();
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
                     });
-                    if (key.equals("name")) {
-                        final DatabaseReference databaser = FirebaseDatabase.getInstance().getReference("Posts");
-                        Query query = databaser.orderByChild("uid").equalTo(uid);
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                    String child = databaser.getKey();
-                                    dataSnapshot1.getRef().child("uname").setValue(value);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                } else {
-                    Toast.makeText(EditProfile.this, "Unable to update", Toast.LENGTH_LONG).show();
                 }
+            } else {
+                Toast.makeText(EditProfile.this, "Unable to update", Toast.LENGTH_LONG).show();
             }
         });
 

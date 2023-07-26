@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -31,8 +32,9 @@ public class MessagesFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     RecyclerView recyclerView;
     List<ModelChatList> chatListList;
-    AdapterChatList adapter;
-    List<ModelUsers> usersList;
+   // AdapterChatList adapter;
+    List<User> usersList;
+    List<ModelUsers> modelUsers;
     DatabaseReference reference;
     FirebaseUser firebaseUser;
     AdapterChatList adapterChatList;
@@ -55,7 +57,10 @@ public class MessagesFragment extends Fragment {
         // getting current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView = view.findViewById(R.id.chatlistrecycle);
-        //adapter = new AdapterChatList(MessagesFragment.this, usersList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //recyclerView.setLayoutManager(new LinearLayoutManager());
+        adapterChatList = new AdapterChatList(getActivity(), usersList, modelUsers);
 
         chatListList = new ArrayList<>();
         chatList = new ArrayList<>();
@@ -103,19 +108,19 @@ public class MessagesFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    ModelUsers user = dataSnapshot1.getValue(ModelUsers.class);
+                    User user = dataSnapshot1.getValue(User.class);
                     for (ModelChatList chatList : chatListList) {
-                        if (user.getUid() != null && user.getUid().equals(chatList.getId())) {
+                        if (user.getUserId() != null && user.getUserId().equals(chatList.getId())) {
                             usersList.add(user);
                             break;
                         }
                     }
-                    adapterChatList = new AdapterChatList(getActivity(), usersList);
+                    adapterChatList = new AdapterChatList(getActivity(), usersList, modelUsers);
                     recyclerView.setAdapter(adapterChatList);
-
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     // getting last message of the user
                     for (int i = 0; i < usersList.size(); i++) {
-                        lastMessage(usersList.get(i).getUid());
+                        lastMessage(usersList.get(i).getUserId());
                     }
                 }
             }

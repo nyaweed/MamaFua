@@ -30,6 +30,8 @@
         <activity
             android:name=".VendorsActivity"
             android:exported="false" />
+        <activity android:name=".ChatActivity"
+            android:exported="false"/>
         <activity android:name=".TestActivity"
             android:exported="false"/>
         <activity

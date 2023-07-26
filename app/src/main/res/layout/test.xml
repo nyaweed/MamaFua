@@ -119,103 +119,13 @@
                 android:elevation="10dp"
                 android:src="@drawable/baseline_favorite_border_24" />
 
-            <TextView
-                android:id="@+id/text_periode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/rating"
-                android:layout_marginTop="15dp"
-                android:textStyle="bold"
-                android:text="Work Period"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_group_periode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_periode"
-                android:scrollbars="horizontal"
-                app:singleLine="true">
 
-                <com.google.android.material.chip.Chip
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:text="Weekly"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    app:chipBackgroundColor="@color/colorAccent" />
 
-                <com.google.android.material.chip.Chip
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:text="Biweekly"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    app:chipBackgroundColor="@color/white"
-                    app:chipStrokeColor="@color/black"
-                    app:chipStrokeWidth="1dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:text="Monthly"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    app:chipBackgroundColor="@color/white"
-                    app:chipStrokeColor="@color/black"
-                    app:chipStrokeWidth="1dp" />
 
-            </com.google.android.material.chip.ChipGroup>
 
-            <TextView
-                android:id="@+id/text_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/chip_group_periode"
-                android:layout_marginTop="15dp"
-                android:text="Work Time"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_group_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_time"
-                android:scrollbars="horizontal"
-                app:singleLine="true">
-
-                <com.google.android.material.chip.Chip
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:text="07:00"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    app:chipBackgroundColor="@color/white"
-                    app:chipStrokeColor="@color/black"
-                    app:chipStrokeWidth="1dp" />
-
-                <com.google.android.material.chip.Chip
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:text="10:00"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    app:chipBackgroundColor="@color/colorAccent" />
-
-                <com.google.android.material.chip.Chip
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:text="14:00"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    app:chipBackgroundColor="@color/white"
-                    app:chipStrokeColor="@color/black"
-                    app:chipStrokeWidth="1dp" />
-
-            </com.google.android.material.chip.ChipGroup>
 
             <ImageButton
                 android:id="@+id/button_phone"
@@ -235,17 +145,6 @@
                 android:background="@drawable/round_background"
                 android:src="@drawable/baseline_message_24" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/splash_background"
-                android:paddingStart="30dp"
-                android:paddingEnd="30dp"
-                android:text="Make Appointment"
-                android:textAllCaps="false"
-                android:textStyle="bold" />
         </RelativeLayout>
     </LinearLayout>
 

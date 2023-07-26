@@ -3,7 +3,7 @@ package com.example.mamafua;
 //import static com.example.mamafua.TestActivity.PhoneNumberUtils.openCallDialer;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,9 +28,10 @@ public class TestActivity extends AppCompatActivity {
     TextView detailDesc, detailTitle, detailLang, detailPhone;
     ImageView detailImage;
 
-    ImageButton callVendor;
+    ImageButton callVendor, textVendor;
     //FloatingActionButton deleteButton, editButton;
     String key = "";
+    String uid;
     String imageUrl = "";
     private RatingBar ratingBar;
 
@@ -48,7 +49,7 @@ public class TestActivity extends AppCompatActivity {
         detailTitle = findViewById(R.id.detailTitle);
         detailPhone = findViewById(R.id.phone_view);
         //deleteButton = findViewById(R.id.deleteButton);
-        //editButton = findViewById(R.id.editButton);
+        textVendor = findViewById(R.id.button_chat);
         callVendor = findViewById(R.id.button_phone);
         detailLang = findViewById(R.id.detailLocation);
 
@@ -62,6 +63,7 @@ public class TestActivity extends AppCompatActivity {
 
             detailLang.setText(bundle.getString("Location"));
             key = bundle.getString("Key");
+            uid = bundle.getString("userId");
             imageUrl = bundle.getString("Image");
             Glide.with(this).load(bundle.getString("Image")).into(detailImage);
         }
@@ -69,6 +71,13 @@ public class TestActivity extends AppCompatActivity {
 
 
         callVendor.setOnClickListener(view -> openCallDialer());
+
+        textVendor.setOnClickListener(v -> {
+            Intent intent = new Intent(TestActivity.this, ChatActivity.class);
+            intent.putExtra("uid", uid);
+           // intent.setData("name", )
+            startActivity(intent);
+        });
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -89,6 +98,11 @@ public class TestActivity extends AppCompatActivity {
             // Handle case when the phone number is not available
         }
     }
+    private void openChatActivity(){
+
+
+
+    }
 
     private void updateRating(float rating) {
         // Convert the rating to the desired format if needed
@@ -104,7 +118,7 @@ public class TestActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
+                    public void onFailure(Exception e) {
                         Toast.makeText(TestActivity.this, "Failed to update rating", Toast.LENGTH_SHORT).show();
                     }
                 });

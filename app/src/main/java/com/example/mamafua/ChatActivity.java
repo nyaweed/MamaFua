@@ -73,6 +73,7 @@ public class ChatActivity extends AppCompatActivity {
     String cameraPermission[];
     String storagePermission[];
     Uri imageuri = null;
+    String imageUrl;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference users;
     boolean notify = false;
@@ -99,6 +100,13 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         uid = getIntent().getStringExtra("uid");
 
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            name.setText(bundle.getString("Title"));
+            //imageUrl = bundle.getString("Image");
+          //  Glide.with(this).load(bundle.getString("Image")).into(profile);
+        }
+
         // getting uid of another user using intent
         firebaseDatabase = FirebaseDatabase.getInstance();
 
@@ -107,7 +115,7 @@ public class ChatActivity extends AppCompatActivity {
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         checkUserStatus();
-        users = firebaseDatabase.getReference("Users");
+        users = firebaseDatabase.getReference("ApprovedVendors");
         attach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // retrieve user data
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    String nameh = "" + dataSnapshot1.child("name").getValue();
+                    //String nameh = "" + dataSnapshot1.child("name").getValue();
                     image = "" + dataSnapshot1.child("image").getValue();
                     String onlinestatus = "" + dataSnapshot1.child("onlineStatus").getValue();
                     String typingto = "" + dataSnapshot1.child("typingTo").getValue();
@@ -150,9 +158,9 @@ public class ChatActivity extends AppCompatActivity {
                             userstatus.setText("Last Seen:" + timedate);
                         }
                     }
-                    name.setText(nameh);
+                    //name.setText(nameh);
                     try {
-                        Glide.with(ChatActivity.this).load(image).placeholder(R.drawable.profile_image).into(profile);
+                        Glide.with(ChatActivity.this).load(image).placeholder(R.drawable.person_24).into(profile);
                     } catch (Exception e) {
 
                     }

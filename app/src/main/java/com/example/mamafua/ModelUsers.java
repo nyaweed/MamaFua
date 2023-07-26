@@ -6,6 +6,8 @@ public class ModelUsers {
     }
 
     String name;
+    String email;
+    String image;
 
     public ModelUsers() {
     }
@@ -33,6 +35,15 @@ public class ModelUsers {
         return email;
     }
 
+    public ModelUsers(String name, String email, String image, String onlineStatus, String typingTo, String uid) {
+        this.name = name;
+        this.email = email;
+        this.image = image;
+        this.onlineStatus = onlineStatus;
+        this.typingTo = typingTo;
+        this.uid = uid;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -53,18 +64,6 @@ public class ModelUsers {
         this.uid = uid;
     }
 
-    public ModelUsers(String name, String onlineStatus, String typingTo, String email, String image, String uid) {
-        this.name = name;
-        this.onlineStatus = onlineStatus;
-        this.typingTo = typingTo;
-        this.email = email;
-        this.image = image;
-        this.uid = uid;
-    }
-
-    String email;
-
-    String image;
 
     String uid;
 }

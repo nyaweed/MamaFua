@@ -24,16 +24,18 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
     FirebaseAuth firebaseAuth;
     String uid;
 
-    public AdapterChatList(FragmentActivity context, List<ModelUsers> users) {
+    public AdapterChatList(FragmentActivity context, List<User> users, List<ModelUsers> users1) {
         this.context = context;
+        this.modelUsers = users1;
         this.usersList = users;
         lastMessageMap = new HashMap<>();
         firebaseAuth = FirebaseAuth.getInstance();
         uid = firebaseAuth.getUid();
     }
 
-    List<ModelUsers> usersList;
-    private HashMap<String, String> lastMessageMap;
+    List<User> usersList;
+    List<ModelUsers> modelUsers;
+    private final HashMap<String, String> lastMessageMap;
 
     @NonNull
     @Override
@@ -45,9 +47,9 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
     @Override
     public void onBindViewHolder(@NonNull Myholder holder, final int position) {
 
-        final String hisuid = usersList.get(position).getUid();
-        String userimage = usersList.get(position).getImage();
-        String username = usersList.get(position).getName();
+        final String hisuid = usersList.get(position).getUserId();
+        String userimage = usersList.get(position).getDataImage();
+        String username = usersList.get(position).getDataTitle();
         String lastmess = lastMessageMap.get(hisuid);
         holder.name.setText(username);
         holder.block.setImageResource(R.drawable.baseline_block_24);
@@ -87,6 +89,7 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
 
     @Override
     public int getItemCount() {
+
         return usersList.size();
     }
 
