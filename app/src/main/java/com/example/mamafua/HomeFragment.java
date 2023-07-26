@@ -83,6 +83,7 @@ public class HomeFragment extends Fragment {
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -97,19 +98,17 @@ public class HomeFragment extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.recyclerview_recommended);
 
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         usersList = new ArrayList<>();
         firebaseAuth = FirebaseAuth.getInstance();
         getAllUsers();
 
-        notify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), NotifyActivity.class);
-                startActivity(intent);
+        notify.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), NotifyActivity.class);
+            startActivity(intent);
 
-            }
         });
         buttonMoveToActivity.setOnClickListener(v -> {
             // Create an Intent to start the new activity
@@ -123,6 +122,8 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
+
+
         return rootView;
     }
 
@@ -135,12 +136,16 @@ public class HomeFragment extends Fragment {
                 usersList.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelUsers modelUsers = dataSnapshot1.getValue(ModelUsers.class);
-                    assert modelUsers != null;
+
                     if (modelUsers.getUid() != null && !modelUsers.getUid().equals(firebaseUser.getUid())) {
                         usersList.add(modelUsers);
                     }
+
+                   //here
                     adapterUsers = new AdapterUsers(getActivity(), usersList);
                     recyclerView.setAdapter(adapterUsers);
+                    //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
                 }
             }
 
@@ -150,4 +155,5 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 }

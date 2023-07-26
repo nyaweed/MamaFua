@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
     Context context;
     FirebaseAuth firebaseAuth;
     String uid;
+    FirebaseUser firebaseUser;
 
     public AdapterUsers(Context context, List<ModelUsers> list) {
         this.context = context;
@@ -41,15 +43,12 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, final int position) {
         final String hisuid = list.get(position).getUid();
+        String email = firebaseUser.getEmail();
         String userImage = list.get(position).getImage();
         String username = list.get(position).getName();
-        String usermail = list.get(position).getEmail();
-        /*
-        holder.username.setText(list.get(position).getName());
-        holder.recDesc.setText(dataList.get(position).getDataDesc());
-        */
+        //String usermail = list.get(position).getEmail();
         holder.name.setText(username);
-        holder.email.setText(usermail);
+        holder.email.setText(email);
         try {
             Glide.with(context).load(userImage).into(holder.profiletv);
         } catch (Exception e) {
@@ -61,7 +60,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         return list.size();
     }
 
-    class MyHolder extends RecyclerView.ViewHolder {
+    public static class MyHolder extends RecyclerView.ViewHolder {
 
         CircleImageView profiletv;
         TextView name, email;
