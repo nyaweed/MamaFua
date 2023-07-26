@@ -30,7 +30,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="15dp"
 
-                    android:text="Notifications"
+                    android:text="Active Orders"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
@@ -55,7 +55,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/round_background"
-                    android:text="History"
+                    android:text="Order History"
                     android:textAllCaps="false"
                     android:textSize="12sp" />
             </RelativeLayout>
@@ -118,6 +118,34 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal">
 
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image_1"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/bg_item_choose_services"
+                        android:padding="2dp"
+                        android:src="@drawable/ironing"
+                        tools:ignore="ContentDescription"
+                        android:layout_centerInParent="true" />
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/image_1"
+                        android:layout_marginTop="5dp"
+                        android:text="Drop off"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+                        tools:ignore="SmallSp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+
                     <ImageView
                         android:id="@+id/image_2"
                         android:layout_width="50dp"
@@ -134,7 +162,7 @@
                         android:layout_below="@+id/image_2"
                         android:layout_marginTop="5dp"
 
-                        android:text="settings"
+                        android:text="Pick up"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="11sp"
@@ -169,7 +197,33 @@
                         tools:ignore="SmallSp" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
 
+                    <ImageView
+                        android:id="@+id/image_4"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/bg_item_choose_services"
+                        android:padding="2dp"
+                        android:src="@drawable/carwash"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/image_4"
+                        android:layout_marginTop="5dp"
+
+                        android:text="Top up"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+                        tools:ignore="SmallSp" />
+                </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

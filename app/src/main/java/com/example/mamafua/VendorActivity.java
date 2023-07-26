@@ -22,13 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -43,8 +37,6 @@ public class VendorActivity extends AppCompatActivity {
     EditText uploadTopic, uploadPhone, uploadDesc, uploadLang;
     String imageURL;
     Uri uri;
-    FirebaseUser firebaseUser;
-    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +50,6 @@ public class VendorActivity extends AppCompatActivity {
         uploadPhone = findViewById(R.id.uploadPhone);
         saveButton = findViewById(R.id.saveButton);
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -70,7 +60,7 @@ public class VendorActivity extends AppCompatActivity {
                             uri = data.getData();
                             uploadImage.setImageURI(uri);
                         } else {
-                            Toast.makeText(VendorActivity.this, "Please Select Your Photo", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(VendorActivity.this, "No Image Selected", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -88,16 +78,15 @@ public class VendorActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveDataToDatabase();
+                saveData();
             }
         });
     }
 
     public void saveData(){
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("VendorRequests")
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Android Images")
                 .child(uri.getLastPathSegment());
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(VendorActivity.this);
         builder.setCancelable(false);
@@ -113,6 +102,7 @@ public class VendorActivity extends AppCompatActivity {
                 while (!uriTask.isComplete());
                 Uri urlImage = uriTask.getResult();
                 imageURL = urlImage.toString();
+                uploadData();
                 dialog.dismiss();
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -123,7 +113,7 @@ public class VendorActivity extends AppCompatActivity {
         });
     }
 
-/*    public void uploadData() {
+    public void uploadData(){
 
         String title = uploadTopic.getText().toString();
         String desc = uploadDesc.getText().toString();
@@ -135,84 +125,22 @@ public class VendorActivity extends AppCompatActivity {
         //We are changing the child from title to currentDate,
         // because we will be updating title as well and it may affect child value.
 
-        String userId = firebaseUser.getUid();
-        String email = firebaseUser.getEmail();
+        String currentDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
 
-        FirebaseDatabase.getInstance().getReference("VendorRequests").child(userId)
+        FirebaseDatabase.getInstance().getReference("Vendors1").child(currentDate)
                 .setValue(dataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(VendorActivity.this, "You will receive an email shortly.. ", Toast.LENGTH_LONG).show();
+                        if (task.isSuccessful()){
+                            Toast.makeText(VendorActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }
-
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(VendorActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(VendorActivity.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
-    }  */
-
-    public void saveDataToDatabase() {
-
-        String title = uploadTopic.getText().toString();
-        String desc = uploadDesc.getText().toString();
-        String lang = uploadLang.getText().toString();
-        String phone = uploadPhone.getText().toString();
-        String email = firebaseUser.getEmail();
-        String userId = firebaseUser.getUid();
-
-        User dataClass = new User(title, phone, desc, lang, imageURL);
-
-        // Check if the email exists in the "users" reference
-        checkEmailExists(userId, emailExists -> {
-            if (emailExists) {
-                // Email exists in the "users" reference
-                // Notify the user that the email is already registered
-                Toast.makeText(VendorActivity.this, "Email Exists", Toast.LENGTH_LONG).show();
-            } else {
-                // Email does not exist in the "users" reference
-                // Proceed with saving data to "VendorRequests"
-                FirebaseDatabase.getInstance().getReference("VendorRequests").child(userId)
-                        .setValue(dataClass).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(VendorActivity.this, "You will receive an email shortly.. ", Toast.LENGTH_LONG).show();
-                                    finish();
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(VendorActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
-            }
-        });
-    }
-
-    private interface EmailExistsCallback {
-        void onEmailChecked(boolean emailExists);
-    }
-
-    private void checkEmailExists(String email, EmailExistsCallback callback) {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        usersRef.child("Users").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean emailExists = dataSnapshot.exists();
-                callback.onEmailChecked(emailExists);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value, handle error if needed
-            }
-        });
     }
 }

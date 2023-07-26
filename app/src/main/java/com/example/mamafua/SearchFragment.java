@@ -1,13 +1,13 @@
 package com.example.mamafua;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.Manifest;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,9 +15,18 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.viewmodel.CreationExtras;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+import android.content.pm.PackageManager;
+
+
+import com.google.android.gms.location.LocationResult;
+//import com.google.android.gms.location.LocationRequest;
+
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,12 +36,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  **/
-public class SearchFragment extends Fragment implements OnMapReadyCallback {
+public class SearchFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,7 +58,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
     private String mParam2;
     private MapView mapView;
     private GoogleMap googleMap;
-    private Marker userMarker;
     private LocationManager locationManager;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -65,7 +76,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment SearchFragment.
-     **/
+    **/
     // TODO: Rename and change types and number of parameters
     public static SearchFragment newInstance(String param1, String param2) {
         SearchFragment fragment = new SearchFragment();
@@ -79,9 +90,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
-
-
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
     }
 
     @Override
@@ -101,13 +110,16 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
         mapView.onResume();
         //request location updates
 
+        requestLocationPermission();
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mapView.onPause();
-
+        if (fusedLocationClient != null && locationCallback != null)
+            fusedLocationClient.removeLocationUpdates(locationCallback);
         //locationManager.removeUpdates(this);//remove location updates
     }
 
@@ -119,20 +131,26 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap map) {
-        this.googleMap = map;
-        if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED){
-            googleMap.setMyLocationEnabled(true);
+        googleMap = map;
+        /**
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            requestLocationPermission();
+            return;
+        } **/
+        //googleMap.setMyLocationEnabled(true);
 
-            getCurrentLocation();
-        } else {
-            // Request location permissions if not granted
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
-        }
 
-
+        //map.setMyLocationEnabled(true);
+        //map.getUiSettings().setMyLocationButtonEnabled(true);
+        // Configure and customize the map as needed
+        // Add markers, set camera position, etc.
 
     }
 
@@ -148,7 +166,22 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
         mapView.onLowMemory();
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        // Get the user's current location
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        LatLng currentLocation = new LatLng(latitude, longitude);
 
+        // Add a marker at the user's location
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(currentLocation)
+                .title("My Location");
+        googleMap.addMarker(markerOptions);
+
+        // Move the camera to the user's location
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -159,85 +192,78 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
         mapView.onCreate(savedInstanceState);
         searchView = rootView.findViewById(R.id.search);
         locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        mapView.getMapAsync(this);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
+        mapView.getMapAsync(map -> {
+            googleMap = map;
+            // Customize the map as needed
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                googleMap.setMyLocationEnabled(true);
+            }
+        });
 
         return rootView;
 
 
     }
 
-/*    private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            }, LOCATION_PERMISSION_REQUEST_CODE);
-            return;
-        }
-
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener((Executor) this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            googleMap.addMarker(new MarkerOptions().position(currentLatLng).title("Current Location"));
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15.0f));
-                        }
-                    }
-                });
-    } **/
-
-    private void getCurrentLocation() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                if (location != null) {
-                    // Get the user's current location
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-
-                    // Create a LatLng object with the user's location
-                    LatLng userLatLng = new LatLng(latitude, longitude);
-
-                    // Add a marker to the map
-                    MarkerOptions markerOptions = new MarkerOptions()
-                            .position(userLatLng)
-                            .title("Current Location");
-                    //Marker marker = googleMap.addMarker(markerOptions);
-                    userMarker = googleMap.addMarker(new MarkerOptions()
-                            .position(userLatLng)
-                            .title("Current Location")
-                            .snippet("This is the current location of the user"));
-
-
-                    // Move the camera to the user's location
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f));
-                }
-            });
+    private void requestLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            getUserLocation();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if(googleMap != null){
-                    //googleMap.setMyLocationEnabled(true);
-                    getCurrentLocation();
-                }
-            }else {
-
+                getUserLocation();
+            } else {
+                Toast.makeText(requireContext(), "Location permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    public void getUserLocation() {
+        //fusedLocationClient.requestLocationUpdates(createLocationRequest(), locationCallback, null);
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult != null) {
+                    Location location = locationResult.getLastLocation();
+                    if (location != null) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+                        LatLng userLatLng = new LatLng(latitude, longitude);
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 14f));
+                        addMarker(userLatLng);
+                    }
+                }
+            }
+        };
+    }
+    /**
+    public LocationRequest createLocationRequest() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
+        return locationRequest;
+    } **/
 
+    private void addMarker(LatLng latLng) {
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(latLng)
+                .title("Your Location");
+        Marker marker = googleMap.addMarker(markerOptions);
+        marker.showInfoWindow();
+    }
 
+    @NonNull
+    @Override
+    public CreationExtras getDefaultViewModelCreationExtras() {
+        return super.getDefaultViewModelCreationExtras();
+    }
 }

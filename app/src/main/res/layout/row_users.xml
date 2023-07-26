@@ -2,18 +2,17 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:id="@+id/recCard"
-    app:cardBackgroundColor="#C0A6ED"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="8dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp"
     app:cardUseCompatPadding="true"
-    app:contentPadding="0dp">
+    app:contentPadding="3dp">
 
     <LinearLayout
-        android:layout_width="292dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 

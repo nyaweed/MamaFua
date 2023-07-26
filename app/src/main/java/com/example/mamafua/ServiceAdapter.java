@@ -1,11 +1,9 @@
 package com.example.mamafua;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,11 +16,6 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.MyViewHo
 
     Context context;
     ArrayList<Services> servicesArraylist;
-    private OnItemClickListener listener;
-
-    public interface OnItemClickListener{
-        void onItemClick(int position);
-    }
 
     //generate constructor
 
@@ -44,12 +37,6 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.MyViewHo
         holder.s_name.setText(service.name);
         holder.s_image.setImageResource(service.image);
 
-        holder.itemView.setOnClickListener(v -> {
-            //listener.onItemClick(position);
-            Intent intent = new Intent(context, VendorsActivity.class);
-            context.startActivity(intent);
-        });
-
     }
 
     @Override
@@ -60,12 +47,10 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.MyViewHo
         TextView s_name;
         ImageView s_image;
 
-
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             s_image = itemView.findViewById(R.id.imageViewvendor);
             s_name = itemView.findViewById(R.id.Service_name);
-            //S_card = itemView.findViewById(R.id.card_view);
         }
     }
 }

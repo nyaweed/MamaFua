@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -32,7 +31,7 @@ public class MessagesFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     RecyclerView recyclerView;
     List<ModelChatList> chatListList;
-   // AdapterChatList adapter;
+    AdapterChatList adapter;
     List<ModelUsers> usersList;
     DatabaseReference reference;
     FirebaseUser firebaseUser;
@@ -56,9 +55,6 @@ public class MessagesFragment extends Fragment {
         // getting current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView = view.findViewById(R.id.chatlistrecycle);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        //recyclerView.setLayoutManager(new LinearLayoutManager());
         //adapter = new AdapterChatList(MessagesFragment.this, usersList);
 
         chatListList = new ArrayList<>();
@@ -116,7 +112,7 @@ public class MessagesFragment extends Fragment {
                     }
                     adapterChatList = new AdapterChatList(getActivity(), usersList);
                     recyclerView.setAdapter(adapterChatList);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
                     // getting last message of the user
                     for (int i = 0; i < usersList.size(); i++) {
                         lastMessage(usersList.get(i).getUid());

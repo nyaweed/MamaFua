@@ -152,7 +152,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     name.setText(nameh);
                     try {
-                        Glide.with(ChatActivity.this).load(image).placeholder(R.drawable.person_24).into(profile);
+                        Glide.with(ChatActivity.this).load(image).placeholder(R.drawable.profile_image).into(profile);
                     } catch (Exception e) {
 
                     }
