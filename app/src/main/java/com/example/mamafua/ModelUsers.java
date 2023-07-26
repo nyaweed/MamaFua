@@ -1,13 +1,13 @@
 package com.example.mamafua;
 
 public class ModelUsers {
-    public void setOnlineStatus(String onlineStatus) {
-        this.onlineStatus = onlineStatus;
-    }
-
     String name;
 
     public ModelUsers() {
+    }
+
+    public void setOnlineStatus(String onlineStatus) {
+        this.onlineStatus = onlineStatus;
     }
 
     String onlineStatus;
@@ -15,6 +15,9 @@ public class ModelUsers {
 
     public String getName() {
         return name;
+    }
+    public void setOnlineStatus(){
+        this.onlineStatus = onlineStatus;
     }
 
     public void setName(String name) {

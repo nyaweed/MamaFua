@@ -3,13 +3,15 @@ package com.example.mamafua;
 //import static com.example.mamafua.TestActivity.PhoneNumberUtils.openCallDialer;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,21 +22,25 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class TestActivity extends AppCompatActivity {
 
     TextView detailDesc, detailTitle, detailLang, detailPhone;
     ImageView detailImage;
 
-    ImageButton callVendor;
+    ImageButton callVendor, textVendor;
     //FloatingActionButton deleteButton, editButton;
     String key = "";
+    String uid, name;
     String imageUrl = "";
     private RatingBar ratingBar;
 
-    private DatabaseReference ratingRef;
+    private DatabaseReference ratingRef, userIdRef;
 
 
     @Override
@@ -48,7 +54,7 @@ public class TestActivity extends AppCompatActivity {
         detailTitle = findViewById(R.id.detailTitle);
         detailPhone = findViewById(R.id.phone_view);
         //deleteButton = findViewById(R.id.deleteButton);
-        //editButton = findViewById(R.id.editButton);
+        textVendor = findViewById(R.id.button_chat);
         callVendor = findViewById(R.id.button_phone);
         detailLang = findViewById(R.id.detailLocation);
 
@@ -59,16 +65,35 @@ public class TestActivity extends AppCompatActivity {
             detailDesc.setText(bundle.getString("Description"));
             detailTitle.setText(bundle.getString("Title"));
             detailPhone.setText(bundle.getString("Contact"));
+            name = bundle.getString("Title");
 
             detailLang.setText(bundle.getString("Location"));
             key = bundle.getString("Key");
+            uid = bundle.getString("userId");
             imageUrl = bundle.getString("Image");
             Glide.with(this).load(bundle.getString("Image")).into(detailImage);
+
+
         }
         ratingRef = FirebaseDatabase.getInstance().getReference("Ratings");
+        userIdRef = FirebaseDatabase.getInstance().getReference("ApprovedVendors");
+
+
+
 
 
         callVendor.setOnClickListener(view -> openCallDialer());
+
+        textVendor.setOnClickListener(v -> {
+
+            Intent intent = new Intent(TestActivity.this, ChatActivity.class);
+            intent.putExtra("userId", uid);
+            intent.putExtra("Title", name);
+            intent.putExtra("Image", imageUrl);
+
+
+            startActivity(intent);
+        });
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -89,6 +114,11 @@ public class TestActivity extends AppCompatActivity {
             // Handle case when the phone number is not available
         }
     }
+    private void openChatActivity(){
+
+
+
+    }
 
     private void updateRating(float rating) {
         // Convert the rating to the desired format if needed
@@ -104,7 +134,7 @@ public class TestActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
+                    public void onFailure(Exception e) {
                         Toast.makeText(TestActivity.this, "Failed to update rating", Toast.LENGTH_SHORT).show();
                     }
                 });

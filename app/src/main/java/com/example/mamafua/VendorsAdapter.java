@@ -21,6 +21,7 @@ public class VendorsAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     private Context context;
     private List<User> dataList;
+    private List<ModelUsers> modelUsers;
 
     public VendorsAdapter(Context context, List<User> dataList) {
         this.context = context;
@@ -51,6 +52,7 @@ public class VendorsAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 intent.putExtra("Key",dataList.get(holder.getAdapterPosition()).getKey());
                 intent.putExtra("Location", dataList.get(holder.getAdapterPosition()).getDataLang());
                 intent.putExtra("Contact", dataList.get(holder.getAdapterPosition()).getDataPhone());
+                intent.putExtra("userId", dataList.get(holder.getAdapterPosition()).getUserId());
                 context.startActivity(intent);
             }
         });

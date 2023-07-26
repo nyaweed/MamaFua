@@ -43,7 +43,7 @@ public class VendorsActivity extends AppCompatActivity {
         dataList = new ArrayList<>();
         adapter = new VendorsAdapter(VendorsActivity.this, dataList);
         recyclerView.setAdapter(adapter);
-        databaseReference = FirebaseDatabase.getInstance().getReference("Vendors1");
+        databaseReference = FirebaseDatabase.getInstance().getReference("ApprovedVendors");
         dialog.show();
         eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

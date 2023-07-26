@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -61,7 +62,7 @@ public class ChatActivity extends AppCompatActivity {
     EditText msg;
     ImageButton send, attach;
     FirebaseAuth firebaseAuth;
-    String uid, myuid, image;
+    String uid, myuid, image, userId;
     ValueEventListener valueEventListener;
     List<ModelChat> chatList;
     AdapterChat adapterChat;
@@ -72,9 +73,10 @@ public class ChatActivity extends AppCompatActivity {
     private static final int STORAGE_REQUEST = 200;
     String cameraPermission[];
     String storagePermission[];
-    Uri imageuri = null;
+    Uri imageuri;
+    String imageUrl;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference users;
+    DatabaseReference users, vendors;
     boolean notify = false;
     boolean isBlocked = false;
 
@@ -97,7 +99,16 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.chatrecycle);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        uid = getIntent().getStringExtra("uid");
+        uid = getIntent().getStringExtra("userId");
+
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            //uid = bundle.getString("uid");
+            name.setText(bundle.getString("Title"));
+            imageUrl = bundle.getString("Image");
+            Glide.with(this).load(bundle.getString("Image")).into(profile);
+        }
 
         // getting uid of another user using intent
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -108,6 +119,7 @@ public class ChatActivity extends AppCompatActivity {
 
         checkUserStatus();
         users = firebaseDatabase.getReference("Users");
+        vendors = firebaseDatabase.getReference("ApprovedVendors");
         attach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,8 +146,8 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // retrieve user data
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    String nameh = "" + dataSnapshot1.child("name").getValue();
-                    image = "" + dataSnapshot1.child("image").getValue();
+                    //String nameh = "" + dataSnapshot1.child("name").getValue();
+                    //image = "" + dataSnapshot1.child("image").getValue();
                     String onlinestatus = "" + dataSnapshot1.child("onlineStatus").getValue();
                     String typingto = "" + dataSnapshot1.child("typingTo").getValue();
                     if (typingto.equals(myuid)) {// if user is typing to my chat
@@ -150,12 +162,13 @@ public class ChatActivity extends AppCompatActivity {
                             userstatus.setText("Last Seen:" + timedate);
                         }
                     }
-                    name.setText(nameh);
-                    try {
-                        Glide.with(ChatActivity.this).load(image).placeholder(R.drawable.profile_image).into(profile);
-                    } catch (Exception e) {
+                    //name.setText(nameh);
+                    //try {
+                    //    Glide.with(ChatActivity.this).load(image).placeholder(R.drawable.person_24).into(profile);
+                    //}
+                    // catch (Exception e) {
 
-                    }
+                    //}
                 }
             }
 
@@ -222,8 +235,8 @@ public class ChatActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelChat modelChat = dataSnapshot1.getValue(ModelChat.class);
                     if (modelChat.getSender().equals(myuid) &&
-                            modelChat.getReceiver().equals(uid) ||
-                            modelChat.getReceiver().equals(myuid)
+                            uid.equals(modelChat.getReceiver()) ||
+                            myuid.equals(modelChat.getReceiver())
                                     && modelChat.getSender().equals(uid)) {
                         chatList.add(modelChat); // add the chat in chatlist
                     }
@@ -268,7 +281,6 @@ public class ChatActivity extends AppCompatActivity {
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         // request for permission if not given
-        //
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case CAMERA_REQUEST: {
@@ -471,16 +483,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-/**
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.logout) {
-            firebaseAuth.signOut();
-            checkUserStatus();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    **/
+
 
     private void checkUserStatus() {
         FirebaseUser user = firebaseAuth.getCurrentUser();

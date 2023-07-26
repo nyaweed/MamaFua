@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -31,8 +32,9 @@ public class MessagesFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     RecyclerView recyclerView;
     List<ModelChatList> chatListList;
-    AdapterChatList adapter;
-    List<ModelUsers> usersList;
+   AdapterChatList adapter;
+    //List<User> usersList;
+    List<ModelUsers> modelUsers;
     DatabaseReference reference;
     FirebaseUser firebaseUser;
     AdapterChatList adapterChatList;
@@ -55,7 +57,12 @@ public class MessagesFragment extends Fragment {
         // getting current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView = view.findViewById(R.id.chatlistrecycle);
-        //adapter = new AdapterChatList(MessagesFragment.this, usersList);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //recyclerView.setLayoutManager(new LinearLayoutManager());
+        adapterChatList = new AdapterChatList(getActivity(), modelUsers);
+        recyclerView.setAdapter(adapterChatList);
 
         chatListList = new ArrayList<>();
         chatList = new ArrayList<>();
@@ -96,28 +103,32 @@ public class MessagesFragment extends Fragment {
 
     // loading the user chat layout using chat node
     private void loadChats() {
-        usersList = new ArrayList<>();
+        modelUsers = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                usersList.clear();
+                modelUsers.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelUsers user = dataSnapshot1.getValue(ModelUsers.class);
                     for (ModelChatList chatList : chatListList) {
+                        //assert user != null;
                         if (user.getUid() != null && user.getUid().equals(chatList.getId())) {
-                            usersList.add(user);
+                            modelUsers.add(user);
                             break;
                         }
                     }
-                    adapterChatList = new AdapterChatList(getActivity(), usersList);
-                    recyclerView.setAdapter(adapterChatList);
-
                     // getting last message of the user
-                    for (int i = 0; i < usersList.size(); i++) {
-                        lastMessage(usersList.get(i).getUid());
+                    for (int i = 0; i < modelUsers.size(); i++) {
+                        lastMessage(modelUsers.get(i).getUid());
                     }
+
+
                 }
+                adapterChatList = new AdapterChatList(getActivity(), modelUsers);
+                recyclerView.setAdapter(adapterChatList);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
             }
 
             @Override

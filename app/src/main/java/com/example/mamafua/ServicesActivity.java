@@ -46,6 +46,8 @@ public class ServicesActivity extends AppCompatActivity {
         };
     
     getData();
+
+
     
     }
 
@@ -56,5 +58,7 @@ public class ServicesActivity extends AppCompatActivity {
         }
         myAdapter.notifyDataSetChanged();
     }
+
+
 
 }

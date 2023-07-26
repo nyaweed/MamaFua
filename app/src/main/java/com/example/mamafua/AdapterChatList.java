@@ -24,30 +24,32 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
     FirebaseAuth firebaseAuth;
     String uid;
 
-    public AdapterChatList(FragmentActivity context, List<ModelUsers> users) {
+    public AdapterChatList(FragmentActivity context, List<ModelUsers> modelUsers) {
         this.context = context;
-        this.usersList = users;
+        this.modelUsers = modelUsers;
+        //this.usersList = users;
         lastMessageMap = new HashMap<>();
         firebaseAuth = FirebaseAuth.getInstance();
         uid = firebaseAuth.getUid();
     }
 
-    List<ModelUsers> usersList;
-    private HashMap<String, String> lastMessageMap;
+    //List<User> usersList;
+    List<ModelUsers> modelUsers;
+    private final HashMap<String, String> lastMessageMap;
 
     @NonNull
     @Override
     public Myholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.row_chatlist, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_chatlist, parent, false);
         return new Myholder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Myholder holder, final int position) {
 
-        final String hisuid = usersList.get(position).getUid();
-        String userimage = usersList.get(position).getImage();
-        String username = usersList.get(position).getName();
+        final String hisuid = modelUsers.get(position).getUid();
+        String userimage = modelUsers.get(position).getImage();
+        String username = modelUsers.get(position).getName();
         String lastmess = lastMessageMap.get(hisuid);
         holder.name.setText(username);
         holder.block.setImageResource(R.drawable.baseline_block_24);
@@ -87,7 +89,7 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
 
     @Override
     public int getItemCount() {
-        return usersList.size();
+        return modelUsers.size();
     }
 
     class Myholder extends RecyclerView.ViewHolder {

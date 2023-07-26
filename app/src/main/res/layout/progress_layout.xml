@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
+    android:background="@color/lavender"
+
     android:layout_height="wrap_content">
 
     <ProgressBar
@@ -9,9 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
-        android:text="saving.."
+        android:text="Please wait.."
         android:textSize="20sp"/>
 
 </LinearLayout>
