@@ -115,7 +115,7 @@ public class MessagesFragment extends Fragment {
                         //assert user != null;
                         if (user.getUid() != null && user.getUid().equals(chatList.getId())) {
                             modelUsers.add(user);
-                            break;
+                            break;//
                         }
                     }
                     // getting last message of the user
