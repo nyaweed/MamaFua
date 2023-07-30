@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -24,32 +23,30 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
     FirebaseAuth firebaseAuth;
     String uid;
 
-    public AdapterChatList(FragmentActivity context, List<ModelUsers> modelUsers) {
+    public AdapterChatList(Context context, List<ModelUsers> users) {
         this.context = context;
-        this.modelUsers = modelUsers;
-        //this.usersList = users;
+        this.usersList = users;
         lastMessageMap = new HashMap<>();
         firebaseAuth = FirebaseAuth.getInstance();
         uid = firebaseAuth.getUid();
     }
 
-    //List<User> usersList;
-    List<ModelUsers> modelUsers;
-    private final HashMap<String, String> lastMessageMap;
+    List<ModelUsers> usersList;
+    private HashMap<String, String> lastMessageMap;
 
     @NonNull
     @Override
     public Myholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_chatlist, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_chatlist, parent, false);
         return new Myholder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Myholder holder, final int position) {
 
-        final String hisuid = modelUsers.get(position).getUid();
-        String userimage = modelUsers.get(position).getImage();
-        String username = modelUsers.get(position).getName();
+        final String hisuid = usersList.get(position).getUid();
+        String userimage = usersList.get(position).getImage();
+        String username = usersList.get(position).getName();
         String lastmess = lastMessageMap.get(hisuid);
         holder.name.setText(username);
         holder.block.setImageResource(R.drawable.baseline_block_24);
@@ -75,7 +72,7 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
                 Intent intent = new Intent(context, ChatActivity.class);
 
                 // putting uid of user in extras
-                intent.putExtra("uid", hisuid);
+                //intent.putExtra("uid", hisuid);
                 context.startActivity(intent);
             }
         });
@@ -89,7 +86,7 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
 
     @Override
     public int getItemCount() {
-        return modelUsers.size();
+        return usersList.size();
     }
 
     class Myholder extends RecyclerView.ViewHolder {

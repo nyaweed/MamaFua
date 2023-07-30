@@ -120,33 +120,40 @@ public class AccountFragment extends Fragment {
             }
         });  */
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
-        databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // This method is called once with the initial data and again
                 // whenever data at this location is updated.
                 String emaill = firebaseUser.getEmail();
 
+
                 // Iterate through the data
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     // Retrieve data for each user
-                    String name = userSnapshot.child("name").getValue(String.class);
-                    //String emaill = userSnapshot.child("email").getValue(String.class);
+                    String name = "" + userSnapshot.child("name").getValue(String.class);
+                    String emails = userSnapshot.child("email").getValue(String.class);
                     String image = userSnapshot.child("image").getValue(String.class);
 
                     // Do something with the data (e.g., display it in the UI)
-                    nam.setText(name);
-                    email.setText(emaill);
+                    if(emaill != null && emaill.equals(emails)) {
 
-                    if(isAdded()) {
+                        nam.setText(name);
 
-                        Glide.with(getContext())
-                                .load(image)
-                                .placeholder(R.drawable.baseline_account_circle_24)
-                                .into(avatartv);
+                        email.setText(emails);
+
+
+                        if(isAdded()) {
+
+                            Glide.with(getContext())
+                                    .load(image)
+                                    .placeholder(R.drawable.baseline_account_circle_24)
+                                    .into(avatartv);
+                        }
                     }
+
                     //Log.d("User Data", "Name: " + name + ", Email: " + email + ", Image: " + image);
                 }
             }

@@ -1,6 +1,7 @@
 package com.example.mamafua;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,15 +30,12 @@ public class MessagesFragment extends Fragment {
 
     FirebaseAuth firebaseAuth;
     RecyclerView recyclerView;
-    List<ModelChatList> chatListList;
-   AdapterChatList adapter;
-    //List<User> usersList;
-    List<ModelUsers> modelUsers;
+    List<ModelChatList> chatListList = new ArrayList<>();
+    List<ModelUsers> usersList = new ArrayList<>();
     DatabaseReference reference;
     FirebaseUser firebaseUser;
     AdapterChatList adapterChatList;
-    List<ModelChat> chatList;
-     private FloatingActionButton fab;
+    List<ModelChat> chatList = new ArrayList<>();
 
     public MessagesFragment() {
         // Required empty public constructor
@@ -52,17 +48,14 @@ public class MessagesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
         firebaseAuth = FirebaseAuth.getInstance();
-        fab = view.findViewById(R.id.new_chat);
 
         // getting current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView = view.findViewById(R.id.chatlistrecycle);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        //recyclerView.setLayoutManager(new LinearLayoutManager());
-        adapterChatList = new AdapterChatList(getActivity(), modelUsers);
+        adapterChatList = new AdapterChatList(getActivity(), usersList);
         recyclerView.setAdapter(adapterChatList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         chatListList = new ArrayList<>();
         chatList = new ArrayList<>();
@@ -73,12 +66,13 @@ public class MessagesFragment extends Fragment {
                 chatListList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     ModelChatList modelChatList = ds.getValue(ModelChatList.class);
-                    if (!modelChatList.getId().equals(firebaseUser.getUid())) {
+                    if (!firebaseUser.getUid().equals(modelChatList.getId())) {
                         chatListList.add(modelChatList);
                     }
 
                 }
                 loadChats();
+                loadLastMessage();
             }
 
             @Override
@@ -86,56 +80,57 @@ public class MessagesFragment extends Fragment {
 
             }
         });
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Perform your action when the FAB is clicked
-                addNewChat();
-            }
-        });
+        //loadChats();
         return view;
 
     }
 
-    private void addNewChat() {
+    private void loadLastMessage() {
+        for (int i = 0; i < usersList.size(); i++) {
+            lastMessage(usersList.get(i).getUid());
+        }
     }
 
     // loading the user chat layout using chat node
     private void loadChats() {
-        modelUsers = new ArrayList<>();
+        //usersList = new ArrayList<>();
+        Log.d("Mama fua", "chatListList size: " + chatListList.size());
+        // Check the size of chatListList
+        Log.d("mama fua", "userlist size: " + usersList.size());
+
         reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                modelUsers.clear();
+                usersList.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    String user1 = firebaseUser.getUid();
                     ModelUsers user = dataSnapshot1.getValue(ModelUsers.class);
-                    for (ModelChatList chatList : chatListList) {
-                        //assert user != null;
-                        if (user.getUid() != null && user.getUid().equals(chatList.getId())) {
-                            modelUsers.add(user);
-                            break;
-                        }
-                    }
-                    // getting last message of the user
-                    for (int i = 0; i < modelUsers.size(); i++) {
-                        lastMessage(modelUsers.get(i).getUid());
-                    }
 
 
+                    if (user != null && isUserInChatList()) {
+                        usersList.add(user);
+                    }
                 }
-                adapterChatList = new AdapterChatList(getActivity(), modelUsers);
-                recyclerView.setAdapter(adapterChatList);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+                adapterChatList.notifyDataSetChanged();
             }
+            
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+            
         });
+    }
+
+    private boolean isUserInChatList() {
+        for (ModelChatList chatList : chatListList) {
+            if (chatList.getId().equals(firebaseUser.getUid())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void lastMessage(final String uid) {
@@ -169,6 +164,8 @@ public class MessagesFragment extends Fragment {
                     }
                 }
                 adapterChatList.setlastMessageMap(uid, lastmess);
+                //adapterChatList = new AdapterChatList(getActivity(), usersList);
+                //recyclerView.setAdapter(adapterChatList);
                 adapterChatList.notifyDataSetChanged();
             }
 

@@ -56,7 +56,7 @@ public class EditProfile extends AppCompatActivity {
     DatabaseReference databaseReference;
     StorageReference storageReference;
     String storagepath = "Users_Profile_Cover_image/";
-    String uid;
+    String uid, email;
     ImageView set;
     TextView profilepic, editname, editpassword;
     ProgressDialog pd;
@@ -133,9 +133,41 @@ public class EditProfile extends AppCompatActivity {
 
         editname.setOnClickListener(v -> {
             pd.setMessage("Updating Name");
+            uploadEmailToDatabase(email);
             showNamephoneupdate("name");
+
         });
 
+    }
+
+    public void uploadEmailToDatabase(String email) {
+
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("Users");
+        // Get a new unique key for the user
+        String emailId = usersRef.push().getKey();
+
+        if (emailId != null) {
+            // Create a new data entry with the user's email
+            HashMap<String, Object> userMap = new HashMap<>();
+            userMap.put("email", email);
+
+            // Save the user data to the database
+            usersRef.child("uid").child(emailId).setValue(userMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Email saved successfully
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Handle the error when email could not be saved
+                        }
+                    });
+        } else {
+            // Handle the case when userId is null
+        }
     }
 
     @Override

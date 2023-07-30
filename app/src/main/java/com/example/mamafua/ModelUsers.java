@@ -13,6 +13,24 @@ public class ModelUsers {
     String onlineStatus;
     String typingTo;
 
+    public ModelUsers(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+    public String getOnlineStatus() {
+        return onlineStatus;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+    String fcmToken;
+
     public String getName() {
         return name;
     }

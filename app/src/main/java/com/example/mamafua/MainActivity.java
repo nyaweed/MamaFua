@@ -1,23 +1,33 @@
 package com.example.mamafua;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceIdReceiver;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ActionBar actionBar;
     BottomNavigationView navigationView;
+
 
 
     @Override
@@ -28,18 +38,52 @@ public class MainActivity extends AppCompatActivity {
         //onclick listener
 
         actionBar = getSupportActionBar();
-       // actionBar.setTitle("Home Activity");
+
 
 
         navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(selectedListener);
-        //actionBar.setTitle("Home");
+
 
         HomeFragment fragment = new HomeFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "");
         fragmentTransaction.commit();
 
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        sendTokenToServer(token);
+
+
+                        // Log and toast
+
+                        Toast.makeText(MainActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+    private void sendTokenToServer(String token) {
+        // Store the token in the Firebase Realtime Database
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        databaseReference.child(userId).child("fcmToken").setValue(token)
+                .addOnSuccessListener(aVoid -> Log.d("FCM Token", "Token sent to server: " + token))
+                .addOnFailureListener(e -> Log.e("FCM Token", "Error sending token to server: " + e.getMessage()));
+        databaseReference.child(userId).child("email").setValue(email)
+                .addOnSuccessListener(aVoid -> Log.d("email", "Email registerd " + email))
+                .addOnFailureListener(e -> Log.e("email", "Error" + e.getMessage()));
     }
     //switch case scenario
 
@@ -49,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             switch (menuItem.getItemId()) {
 
                 case R.id.home_item:
-                    //actionBar.setTitle("Home");
+
                     HomeFragment fragment = new HomeFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.content, fragment, "");
@@ -57,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.search_item:
-                    //actionBar.setTitle("Profile");
+
                     SearchFragment fragment1 = new SearchFragment();
                     FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction1.replace(R.id.content, fragment1);
@@ -65,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.account_item:
-                    //actionBar.setTitle("Users");
+
                     AccountFragment fragment2 = new AccountFragment();
                     FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "");
@@ -73,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.messages_item:
-                    //actionBar.setTitle("Chats");
+
                     MessagesFragment listFragment = new MessagesFragment();
                     FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction3.replace(R.id.content, listFragment, "");
