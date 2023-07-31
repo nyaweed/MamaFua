@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +24,12 @@ public class VendorsAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private Context context;
     private List<User> dataList;
     private List<ModelUsers> modelUsers;
+    private DatabaseReference likeRef;
 
     public VendorsAdapter(Context context, List<User> dataList) {
         this.context = context;
         this.dataList = dataList;
+        likeRef = FirebaseDatabase.getInstance().getReference().child("ApprovedVendors");
     }
 
     @NonNull
@@ -53,6 +57,7 @@ public class VendorsAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 intent.putExtra("Location", dataList.get(holder.getAdapterPosition()).getDataLang());
                 intent.putExtra("Contact", dataList.get(holder.getAdapterPosition()).getDataPhone());
                 intent.putExtra("userId", dataList.get(holder.getAdapterPosition()).getUserId());
+                intent.putExtra("Likes", dataList.get(holder.getAdapterPosition()).getLikes());
                 context.startActivity(intent);
             }
         });

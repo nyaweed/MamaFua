@@ -89,6 +89,10 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
         return usersList.size();
     }
 
+    public List<ModelUsers> setUsersList(List<ModelUsers> usersList) {
+        return usersList;
+    }
+
     class Myholder extends RecyclerView.ViewHolder {
         ImageView profile, status, block, seen;
         TextView name, lastmessage;

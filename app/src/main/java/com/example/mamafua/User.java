@@ -25,6 +25,7 @@ public class User {
     }
 
     private String name;
+
     private String userId;
 
 
@@ -97,11 +98,14 @@ public class User {
         this.dataImage = dataImage;
         this.dataPhone = dataPhone;
         this.userId = userId;
+
     }
     public User(){
 
     }
 
 
-
+    public int getLikes() {
+        return 0;
+    }
 }

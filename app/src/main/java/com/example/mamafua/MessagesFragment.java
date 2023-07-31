@@ -1,7 +1,6 @@
 package com.example.mamafua;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,13 +65,12 @@ public class MessagesFragment extends Fragment {
                 chatListList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     ModelChatList modelChatList = ds.getValue(ModelChatList.class);
-                    if (!firebaseUser.getUid().equals(modelChatList.getId())) {
+                    if (modelChatList.getId().equals(firebaseUser.getUid())) {
                         chatListList.add(modelChatList);
                     }
 
                 }
                 loadChats();
-                loadLastMessage();
             }
 
             @Override
@@ -80,62 +78,37 @@ public class MessagesFragment extends Fragment {
 
             }
         });
-        //loadChats();
         return view;
 
     }
 
-    private void loadLastMessage() {
-        for (int i = 0; i < usersList.size(); i++) {
-            lastMessage(usersList.get(i).getUid());
-        }
-    }
-
     // loading the user chat layout using chat node
     private void loadChats() {
-        //usersList = new ArrayList<>();
-        Log.d("Mama fua", "chatListList size: " + chatListList.size());
-        // Check the size of chatListList
-        Log.d("mama fua", "userlist size: " + usersList.size());
-
-        reference = FirebaseDatabase.getInstance().getReference("Users");
+        usersList = new ArrayList<>();
+        reference = FirebaseDatabase.getInstance().getReference("Users").child("uid");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    String user1 = firebaseUser.getUid();
                     ModelUsers user = dataSnapshot1.getValue(ModelUsers.class);
-                    for (ModelChatList chatList : chatListList) {
-                        if (firebaseUser.getUid() == (chatList.getId())) {
-                            usersList.add(user);
-                        }
-                    }
 
+                    usersList.add(user);
 
-                   // if (user != null && isUserInChatList()) {
-                     //   usersList.add(user);
-                   // }
                 }
                 adapterChatList.notifyDataSetChanged();
+                // getting last message of the user
+                for (int i = 0; i < usersList.size(); i++) {
+                    lastMessage(usersList.get(i).getUid());
+                }
+
             }
-            
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-            
         });
-    }
-
-    private boolean isUserInChatList() {
-        for (ModelChatList chatList : chatListList) {
-            if (firebaseUser.getUid() == (chatList.getId())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void lastMessage(final String uid) {
@@ -169,8 +142,6 @@ public class MessagesFragment extends Fragment {
                     }
                 }
                 adapterChatList.setlastMessageMap(uid, lastmess);
-                //adapterChatList = new AdapterChatList(getActivity(), usersList);
-                //recyclerView.setAdapter(adapterChatList);
                 adapterChatList.notifyDataSetChanged();
             }
 

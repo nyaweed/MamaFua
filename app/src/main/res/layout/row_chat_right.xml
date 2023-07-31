@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:textColor="@color/lavender"
-        android:text="Delivered"
+        android:text="Sent"
         android:textAlignment="textEnd" />
 
 </LinearLayout>

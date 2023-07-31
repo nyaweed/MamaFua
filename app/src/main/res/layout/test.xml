@@ -106,8 +106,8 @@
                 android:layout_marginTop="5dp"
                 android:isIndicator="true"
                 android:numStars="5"
-                android:rating="5"
-                android:stepSize="0.1" />
+
+                android:stepSize="1" />
 
             <ImageButton
                 android:layout_width="50dp"
@@ -118,6 +118,47 @@
                 android:background="@drawable/round_background"
                 android:elevation="10dp"
                 android:src="@drawable/baseline_favorite_border_24" />
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/rate_Us"
+                android:layout_below="@+id/rating"
+                android:layout_marginTop="10dp"
+                android:text="Rate Us"
+                android:background="@drawable/round_background"
+                android:elevation="10dp"
+                android:src="@drawable/baseline_favorite_border_24" />
+
+            <Button
+                android:id="@+id/review_Us"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+
+                android:layout_above="@+id/tv"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="17dp"
+                android:background="@drawable/round_background"
+                android:elevation="10dp"
+                android:src="@drawable/baseline_favorite_border_24"
+                android:text="Write Review" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/rate_Us"
+                android:id="@+id/tv"
+                android:text="Reviews"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/r_View"
+                android:layout_below="@+id/tv"
+                android:layout_marginTop="0dp"/>
+
+
 
 
 
