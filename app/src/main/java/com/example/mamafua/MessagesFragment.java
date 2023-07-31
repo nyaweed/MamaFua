@@ -106,11 +106,16 @@ public class MessagesFragment extends Fragment {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     String user1 = firebaseUser.getUid();
                     ModelUsers user = dataSnapshot1.getValue(ModelUsers.class);
-
-
-                    if (user != null && isUserInChatList()) {
-                        usersList.add(user);
+                    for (ModelChatList chatList : chatListList) {
+                        if (firebaseUser.getUid() == (chatList.getId())) {
+                            usersList.add(user);
+                        }
                     }
+
+
+                   // if (user != null && isUserInChatList()) {
+                     //   usersList.add(user);
+                   // }
                 }
                 adapterChatList.notifyDataSetChanged();
             }
@@ -126,7 +131,7 @@ public class MessagesFragment extends Fragment {
 
     private boolean isUserInChatList() {
         for (ModelChatList chatList : chatListList) {
-            if (chatList.getId().equals(firebaseUser.getUid())) {
+            if (firebaseUser.getUid() == (chatList.getId())) {
                 return true;
             }
         }
