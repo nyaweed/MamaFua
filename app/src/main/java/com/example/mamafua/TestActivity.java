@@ -149,7 +149,7 @@ public class TestActivity extends AppCompatActivity {
                     RatingBar ratingBar = findViewById(R.id.ratingBar);
                     ratingBar.setRating(averageRating.floatValue());
                 }
-            }
+            }//
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
